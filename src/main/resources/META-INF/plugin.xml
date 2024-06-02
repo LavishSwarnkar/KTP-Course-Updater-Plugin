@@ -26,4 +26,10 @@
     <extensions defaultExtensionNs="com.intellij">
 
     </extensions>
+
+    <actions>
+        <action id="UpdateProjectAction" class="com.faangx.updater.UpdateProjectAction" text="Update KTP-Course" description="Updates KTP-Course">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+    </actions>
 </idea-plugin>
