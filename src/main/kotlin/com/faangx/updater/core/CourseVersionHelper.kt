@@ -17,8 +17,14 @@ class CourseVersionHelper(
 
     private suspend fun parseCourseInfoAndGetVersion(url: String): String? {
         val data = client.get(url).bodyAsText()
-        val yaml = Yaml().load<Map<String, Any>>(data)
-        return (yaml["tags"] as? List<String>)?.firstOrNull()
+        return parseVersion(data)
+    }
+
+    companion object {
+        fun parseVersion(data: String): String? {
+            val yaml = Yaml().load<Map<String, Any>>(data)
+            return (yaml["tags"] as? List<String>)?.firstOrNull()
+        }
     }
 
 }

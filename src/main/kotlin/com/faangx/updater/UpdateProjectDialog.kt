@@ -3,36 +3,38 @@ package com.faangx.updater
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.dsl.builder.panel
-import java.awt.Label
 import javax.swing.Action
-import javax.swing.JButton
 import javax.swing.JComponent
-import javax.swing.JLabel
 
 class UpdateProjectDialog(
     project: Project?,
-    val latestVersion: String
+    private val latestVersion: String,
+    private val currentVersion: String?,
+    private val onConfirmUpdate: () -> Unit
 ) : DialogWrapper(project) {
 
     init {
         init()
         title = "Update KTP-Course"
+        setSize(400, 200)
     }
 
     override fun createCenterPanel(): JComponent {
         return panel {
             row {
+                label("Your projects requires an update!")
+            }
+            row {
                 label("Latest version : $latestVersion")
             }
             row {
-                button("Ok") {
-                    close(0)
-                }
+                label("Current version : $currentVersion")
             }
         }
     }
 
-    override fun createActions(): Array<Action> {
-        return emptyArray()
+    override fun doOKAction() {
+        close(CLOSE_EXIT_CODE)
+        onConfirmUpdate()
     }
 }
