@@ -5,4 +5,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "KTP-Course-Update-Plugin"
+rootProject.name = "KTP-Course-Updater-Plugin"
