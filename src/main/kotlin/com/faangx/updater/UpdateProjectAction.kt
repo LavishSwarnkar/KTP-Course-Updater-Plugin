@@ -2,6 +2,7 @@ package com.faangx.updater
 
 import com.faangx.updater.core.CourseVersionHelper
 import com.faangx.updater.core.CurrentProjectChecker
+import com.faangx.updater.util.basePath
 import com.faangx.updater.util.runOnMain
 import com.faangx.updater.util.showProgressIndicatorDialog
 import com.intellij.openapi.actionSystem.AnAction
@@ -10,6 +11,7 @@ import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.ui.Messages
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
@@ -55,10 +57,21 @@ class UpdateProjectAction : AnAction() {
 
     private fun updateProject(project: Project, latestVersion: String) {
         runOnMain {
-            Messages.showInfoMessage(
-                "Your project is updated to the latest version : $latestVersion",
-                "Update Successful"
-            )
+            showProgressIndicatorDialog(
+                project, "Update KTP-Course", "Updating project..."
+            ) {
+                ProjectUpdater.updateProject(project)
+
+                ProjectManager.getInstance().apply {
+                    closeAndDispose(project)
+                    loadAndOpenProject(project.basePath())
+                }
+
+                Messages.showInfoMessage(
+                    "Your project is updated to the latest version : $latestVersion",
+                    "Update Successful"
+                )
+            }
         }
     }
 }

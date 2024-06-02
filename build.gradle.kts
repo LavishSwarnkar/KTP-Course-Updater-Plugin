@@ -14,6 +14,12 @@ repositories {
 dependencies {
     implementation("org.yaml:snakeyaml:2.2")
     implementation("com.github.sya-ri:kgit:1.0.5")
+
+    // Exclude SLF4J from dependencies
+    configurations.all {
+        exclude(group = "org.slf4j", module = "slf4j-api")
+        exclude(group = "org.slf4j", module = "slf4j-simple")
+    }
 }
 
 // Configure Gradle IntelliJ Plugin

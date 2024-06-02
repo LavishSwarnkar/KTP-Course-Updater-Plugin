@@ -29,3 +29,7 @@ fun showProgressIndicatorDialog(
         }
     )
 }
+
+fun Project.basePath(): String {
+    return basePath ?: error("Unable to get project basePath")
+}
