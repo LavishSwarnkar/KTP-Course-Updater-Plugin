@@ -10,7 +10,7 @@ import java.io.File
 
 object ProjectUpdater {
 
-    fun updateProject(project: Project, newProjectPath: String) {
+    fun updateProject(project: Project, newProjectPath: String, latestVersion: String) {
         val forkPath = project.basePath()
         val repoPath = File(forkPath).parentFile.resolve("KTP-Course").path
 
@@ -19,7 +19,7 @@ object ProjectUpdater {
 
         RepoUpdater.updateRepo(repoPath, tasks)
 
-        NewProjectSetupHelper.createNewProject(forkPath, repoPath, newProjectPath)
+        NewProjectSetupHelper.createNewProject(forkPath, repoPath, newProjectPath, latestVersion)
     }
 
 }

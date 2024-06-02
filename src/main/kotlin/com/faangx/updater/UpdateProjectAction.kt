@@ -63,7 +63,7 @@ class UpdateProjectAction : AnAction() {
                     .resolve("KTP-Course-$latestVersion")
                     .path
 
-                ProjectUpdater.updateProject(project, newProjectPath)
+                ProjectUpdater.updateProject(project, newProjectPath, latestVersion)
 
                 runOnMain {
                     Messages.showInfoMessage(
