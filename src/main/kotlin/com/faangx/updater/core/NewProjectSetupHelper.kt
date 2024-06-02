@@ -6,28 +6,23 @@ object NewProjectSetupHelper {
 
     fun createNewProject(
         forkPath: String,
-        repoPath: String
+        repoPath: String,
+        newProjectPath: String
     ) {
         val forkRoot = File(forkPath)
         val repoRoot = File(repoPath)
-        val backupRoot = forkRoot.parentFile.resolve("KTP-Course-Backup")
-
-        // Backup
-        forkRoot.copyRecursively(backupRoot)
-
-        // Delete fork
-        forkRoot.deleteRecursively()
+        val newRoot = File(newProjectPath)
 
         // Duplicate repo
-        repoRoot.copyRecursively(forkRoot)
+        repoRoot.copyRecursively(newRoot)
 
         // Delete .git folder
-        forkRoot.resolve(".git").deleteRecursively()
+        newRoot.resolve(".git").deleteRecursively()
 
         // Copy fork's .git folder
-        backupRoot.resolve(".git")
+        forkRoot.resolve(".git")
             .copyRecursively(
-                forkRoot.resolve(".git")
+                newRoot.resolve(".git")
             )
 
         // Delete cloned repo

@@ -7,19 +7,17 @@ import com.faangx.updater.util.runOnMain
 import com.faangx.updater.util.showProgressIndicatorDialog
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.progress.ProgressIndicator
-import com.intellij.openapi.progress.ProgressManager
-import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.ui.Messages
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import kotlinx.coroutines.runBlocking
+import java.io.File
 
 class UpdateProjectAction : AnAction() {
 
-    val httpClient = HttpClient(CIO) { expectSuccess = true }
+    private val httpClient = HttpClient(CIO) { expectSuccess = true }
 
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.project ?: return
@@ -60,17 +58,24 @@ class UpdateProjectAction : AnAction() {
             showProgressIndicatorDialog(
                 project, "Update KTP-Course", "Updating project..."
             ) {
-                ProjectUpdater.updateProject(project)
+                val newProjectPath = File(project.basePath())
+                    .parentFile
+                    .resolve("KTP-Course-$latestVersion")
+                    .path
 
-                ProjectManager.getInstance().apply {
-                    closeAndDispose(project)
-                    loadAndOpenProject(project.basePath())
+                ProjectUpdater.updateProject(project, newProjectPath)
+
+                runOnMain {
+                    Messages.showInfoMessage(
+                        "Your project has been updated to the latest version : $latestVersion",
+                        "Update Successful"
+                    )
+
+                    ProjectManager.getInstance().apply {
+                        closeAndDispose(project)
+                        loadAndOpenProject(newProjectPath)
+                    }
                 }
-
-                Messages.showInfoMessage(
-                    "Your project is updated to the latest version : $latestVersion",
-                    "Update Successful"
-                )
             }
         }
     }
