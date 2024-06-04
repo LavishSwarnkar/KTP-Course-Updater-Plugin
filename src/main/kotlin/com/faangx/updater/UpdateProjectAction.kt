@@ -2,9 +2,7 @@ package com.faangx.updater
 
 import com.faangx.updater.core.CourseVersionHelper
 import com.faangx.updater.core.CurrentProjectChecker
-import com.faangx.updater.util.basePath
-import com.faangx.updater.util.runOnMain
-import com.faangx.updater.util.showProgressIndicatorDialog
+import com.faangx.updater.util.*
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.Project
@@ -25,14 +23,16 @@ class UpdateProjectAction : AnAction() {
         showProgressIndicatorDialog(
             project, "Update KTP-Course", "Fetching latest version..."
         ) {
-            checkProject(project)
+            runBlocking {
+                suspendExecute {
+                    checkProject(project)
+                }
+            }
         }
     }
 
-    private fun checkProject(project: Project) {
-        val latestVersion = runBlocking {
-            CourseVersionHelper(httpClient).getLatestCourseVersion()
-        }
+    private suspend fun checkProject(project: Project) {
+        val latestVersion = CourseVersionHelper(httpClient).getLatestCourseVersion()
 
         val currentVersion = CurrentProjectChecker.check(project) ?: "v1.0"
 
