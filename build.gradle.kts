@@ -4,8 +4,8 @@ plugins {
     id("org.jetbrains.intellij") version "1.16.0"
 }
 
-group = "com.faangx"
-version = "1.0-SNAPSHOT"
+group = "com.faangx.updater"
+version = "1.0"
 
 repositories {
     mavenCentral()
