@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.faangx.updater"
-version = "1.0"
+version = "1.1"
 
 repositories {
     mavenCentral()
@@ -47,12 +47,20 @@ tasks {
     }
 
     signPlugin {
-        certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
-        privateKey.set(System.getenv("PRIVATE_KEY"))
-        password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
+        certificateChainFile.set(
+            File("secrets").resolve("CERTIFICATE_CHAIN.crt")
+        )
+        privateKeyFile.set(
+            File("secrets").resolve("PRIVATE_KEY.pem")
+        )
+        password.set(
+            File("secrets").resolve("PRIVATE_KEY_PWD.txt").readText()
+        )
     }
 
     publishPlugin {
-        token.set(System.getenv("PUBLISH_TOKEN"))
+        token.set(
+            File("secrets").resolve("PUBLISH_TOKEN.txt").readText()
+        )
     }
 }
