@@ -6,4 +6,6 @@ object Constants {
         "ProgrammingFundamentals"
     )
 
+    const val PLUGIN_ID = "com.faangx.KTP-Course-Update-Plugin"
+
 }

@@ -8,16 +8,24 @@ import org.yaml.snakeyaml.Yaml
 class CourseVersionHelper(
     private val client: HttpClient
 ) {
+    class VersionResult(
+        val latestCourseVersion: String,
+        val latestUpdaterPluginVersion: String
+    )
 
-    suspend fun getLatestCourseVersion(): String {
+    suspend fun getLatestCourseVersion(): VersionResult {
         val courseInfoUrl = "https://raw.githubusercontent.com/The-Streamliners/KTP-Course/main/course-info.yaml"
-        return parseCourseInfoAndGetVersion(courseInfoUrl)
-            ?: error("Version not found in main repo")
-    }
 
-    private suspend fun parseCourseInfoAndGetVersion(url: String): String? {
-        val data = client.get(url).bodyAsText()
-        return parseVersion(data)
+        val data = client.get(courseInfoUrl).bodyAsText()
+        val yaml = Yaml().load<Map<String, Any>>(data)
+        val tags = yaml["tags"] as? List<String> ?: error("tags not found")
+
+        return VersionResult(
+            latestCourseVersion = tags.firstOrNull()
+                ?: error("Version not found in main repo"),
+            latestUpdaterPluginVersion = tags.getOrNull(1)
+                ?: error("UpdaterPluginVersion not found in main repo")
+        )
     }
 
     companion object {
