@@ -12,7 +12,9 @@ object ProjectUpdater {
 
     fun updateProject(project: Project, newProjectPath: String, latestVersion: String) {
         val forkPath = project.basePath()
-        val repoPath = File(forkPath).parentFile.resolve("KTP-Course").path
+        val repoFolder = File(forkPath).parentFile.resolve("KTP-Course-Main-Temp")
+        repoFolder.deleteRecursively()
+        val repoPath = repoFolder.path
 
         RepoCloner.clone(repoPath)
         val tasks = ForkParser.parse(forkPath)
